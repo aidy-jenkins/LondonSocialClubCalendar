@@ -16,15 +16,28 @@ export class EventManager {
      }
 
     async eventExists(event: CalendarEvent) {
-        let {start, end} = EventManager.getDateOfEvent(event, -1);
-        let events = await this.calendarApi.events.list({
+        const events = await this.searchEventDate(event);        
+
+        return events.items.some(calEvent => calEvent.summary === event.title);
+    }
+
+    /** Cached event lists so that we can query Google Calendar API once per date to avoid rate limiting */
+    private _eventCache = Object.create(null) as { [key: string]: Promise<calendar_v3.Schema$Events> };
+
+    private async searchEventDate(event: CalendarEvent) {
+        let {start, end} = EventManager.getDateOfEvent(event, -1, 1);
+
+        let key = `${this.calendarId};${start};${end}`;
+
+        let events = await (this._eventCache[key] ?? (this._eventCache[key] = this.calendarApi.events.list({
             calendarId: this.calendarId, 
+
             timeMin: start, 
             timeMax: end
         })
-        .then(response => response.data);
+        .then(response => response.data)));
 
-        return events.items.some(calEvent => calEvent.summary === event.title);
+        return events;
     }
 
 
@@ -57,15 +70,16 @@ export class EventManager {
     }
 
     private static dateOnlyIso(isoDate: string) {
-        return isoDate.substr(0, isoDate.indexOf('T'));
+        let date = new Date(Date.parse(isoDate));
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     }
 
     private static getDateOfEvent(event: CalendarEvent, startOffset = 0, endOffset = 0) {
         let dateStart = new Date(event.date); //copy to avoid mutation
-        dateStart.setHours(startOffset, 0, 0, 0);
-
         let dateEnd = new Date(dateStart);
         dateEnd.setDate(dateEnd.getDate() + 1);
+        
+        dateStart.setHours(startOffset, 0, 0, 0);
         dateEnd.setHours(endOffset, 0, 0, 0);
     
         return { start: JSON.parse(JSON.stringify(dateStart)), end: JSON.parse(JSON.stringify(dateEnd)) };
