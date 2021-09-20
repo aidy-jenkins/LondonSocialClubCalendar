@@ -26,7 +26,9 @@ interface Config {
 
 let run = (async () => {
     
-    const { Timezone, Google: GoogleConfig, Reddit: RedditConfig } = JSON.parse(await FileSystem.readFile("config.json")) as Config;
+    const config = (process.env.CONFIG ?? JSON.parse(await FileSystem.readFile("config.json"))) as Config;
+
+    const { Timezone, Google: GoogleConfig, Reddit: RedditConfig } = config;
 
     process.env.TZ = Timezone;
 
