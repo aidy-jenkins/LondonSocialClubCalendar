@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+##Key file
+londonsocialclubcalendar-key.json
+
+##Sensitive config
+config.json

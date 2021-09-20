@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "googleapis": "^87.0.0",
+    "snoowrap": "^1.23.0",
+    "ts-node": "^10.2.1"
+  }
+}
