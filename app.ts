@@ -1,6 +1,7 @@
 import { FileSystem } from "./FileSystem";
 import { AuthManager } from "./Google/AuthManager";
 import { EventManager } from "./Google/EventManager";
+import { linq } from "linq-fast";
 import * as Snoowrap from "snoowrap";
 
 /**
@@ -45,22 +46,33 @@ let run = (async () => {
 
     let count = 0;
 
-    await Promise.allSettled(posts.map(async post => {
-        try {
-            await eventManager.publishEvent({
-                description: post.selftext,
-                link: `https://reddit.com${post.permalink}`,
-                title: post.title,
-                user: post.author.name
-            });
-            
-            console.log(`Processed ${++count} events`);
-        }
-        catch(err) {
-            console.error(err);
-        }
-    }));
+    let processQueue = linq(posts);
 
+    const batchSize = 25;
+    const timeBetweenBatches_ms = 5000;
+
+    while(count < posts.length) {
+        let batch = processQueue.skip(count).take(batchSize).select(async post => {
+            try {
+                await eventManager.publishEvent({
+                    description: post.selftext,
+                    link: `https://reddit.com${post.permalink}`,
+                    title: post.title,
+                    user: post.author.name
+                });
+            }
+            catch(err) {
+                console.error(err);
+            }
+            finally {
+                console.log(`Processed ${++count} events`);
+            }
+        });
+
+        await Promise.allSettled(batch.toArray());
+
+        await new Promise(r => setTimeout(r, timeBetweenBatches_ms));
+    }
 })();
 
 let timeoutHandle = setTimeout(() => process.exit(1), 60000); //Ensure process doesn't exit until timeout is reached or finished processing
