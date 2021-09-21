@@ -3,6 +3,7 @@ import { AuthManager } from "./Google/AuthManager";
 import { EventManager } from "./Google/EventManager";
 import { linq } from "linq-fast";
 import * as Snoowrap from "snoowrap";
+import { EventAdapter, LscEvent } from "./EventAdapter";
 
 /**
  * Describes the expected JSON structure of a config.json file that is required for this process to run
@@ -58,14 +59,18 @@ let run = (async () => {
     const timeBetweenBatches_ms = 5000;
 
     while(count < posts.length) {
-        let batch = processQueue.skip(count).take(batchSize).select(async post => {
+        let batch = processQueue.skip(count).take(batchSize)
+        .select(post => ({
+            description: post.selftext,
+            link: `https://reddit.com${post.permalink}`,
+            title: post.title,
+            user: post.author.name
+        } as LscEvent))
+        .select(async lscEvent => {
             try {
-                await eventManager.publishEvent({
-                    description: post.selftext,
-                    link: `https://reddit.com${post.permalink}`,
-                    title: post.title,
-                    user: post.author.name
-                });
+                let calendarEvent = EventAdapter.mapLscEventToCalendarEvent(lscEvent);
+
+                await eventManager.publishEvent(calendarEvent);
             }
             catch(err) {
                 console.error(err);
