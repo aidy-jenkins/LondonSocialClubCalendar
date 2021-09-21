@@ -48,7 +48,7 @@ let run = (async () => {
         password: RedditConfig.Password
     });
 
-    let posts = await snoowrap.getNew("londonsocialclub", { limit: 100 });
+    let posts = await snoowrap.getNew("londonsocialclub", { limit: 25 });
 
     let count = 0;
 
