@@ -32,4 +32,5 @@ jobs:
       - run: node --nolazy -r ts-node/register app.ts
         env:
           CONFIG: ${{ secrets.CONFIG }}
+          AUTHKEY: ${{ secrets.AUTHKEY }}
 
