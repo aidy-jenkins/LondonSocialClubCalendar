@@ -77,7 +77,8 @@ let run = (async () => {
 
         await Promise.allSettled(batch.toArray());
 
-        await new Promise(r => setTimeout(r, timeBetweenBatches_ms));
+        if(count < posts.length) //don't wait if single/final iteration
+            await new Promise(r => setTimeout(r, timeBetweenBatches_ms));
     }
 })();
 
