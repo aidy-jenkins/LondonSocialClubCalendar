@@ -26,11 +26,15 @@ interface Config {
 
 let run = (async () => {
     
-    const config = (process.env.CONFIG ?? JSON.parse(await FileSystem.readFile("config.json"))) as Config;
-
+    const config = JSON.parse(process.env.CONFIG ?? await FileSystem.readFile("config.json")) as Config;
+    const authKey = process.env.AUTHKEY;
+    
     const { Timezone, Google: GoogleConfig, Reddit: RedditConfig } = config;
-
+    
     process.env.TZ = Timezone;
+    
+    if(authKey) //If running in pipeline, write key file so it can be passed to Google client lib
+        await FileSystem.writeFile(GoogleConfig.AuthFile, authKey);
 
     const googleAuth = AuthManager.getAuth(GoogleConfig.AuthFile, GoogleConfig.Scopes); //key deliberately not in source control
 
