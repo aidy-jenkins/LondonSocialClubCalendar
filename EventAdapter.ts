@@ -9,7 +9,11 @@ export module EventAdapter {
         let date: Date;
         let title: string;
         try {
-            let [[datePart, dateStr]] = Array.from(event.title.matchAll(DATE_RE));
+            let matched = Array.from(event.title.matchAll(DATE_RE));
+            if(matched.length < 1)
+                throw new TypeError(`Unfortunately, /u/${event.user} doesn't understand what [DD/MM/YY] means`);
+            
+            let [[datePart, dateStr]] = matched;
             let [day, month, year] = dateStr.split('/').map(x => parseInt(x));
             if([day, month, year].some(Number.isNaN))
                 throw new TypeError(`Date could not be parsed ${dateStr} for event ${event.link}`);
