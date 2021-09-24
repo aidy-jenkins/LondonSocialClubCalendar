@@ -3,7 +3,7 @@ import { CalendarEvent } from "./Google/EventManager";
 export module EventAdapter {
 
     const LOCATION_RE = /@(.+)$/g;
-    const DATE_RE = /\[\s*[0-9-]{1,5}\s*\/\s*[0-9-]{1,5}\s*\/\s*[0-9-]{2,9}\s*\].*/g;
+    const DATE_RE = /\D?(\d+\D\d+\D\d+)[^\d ]?/g;
 
     export function mapLscEventToCalendarEvent(event: LscEvent) {
         let date: Date;
