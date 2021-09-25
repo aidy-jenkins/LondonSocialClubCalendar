@@ -45,9 +45,9 @@ export class EventManager {
         if(await this.eventExists(calendarEvent))
             return; //Already exists - do nothing -- TODO: update event description if changed etc.
 
-        let { start: date } = EventManager.getDateOfEvent(calendarEvent);
+        let { start, end } = EventManager.getDateOfEvent(calendarEvent);
 
-        date = EventManager.dateOnlyIso(date);
+        [start, end] = [start, end].map(EventManager.dateOnlyIso);
 
         await this.calendarApi.events.insert({
             calendarId: this.calendarId,
@@ -56,12 +56,12 @@ export class EventManager {
                 location: calendarEvent.location,
                 description: calendarEvent.description,
 
-                //Setting start and end 'date' field instead of 'datetime' and setting them to be the same marks event as "all-day event"
+                //Setting start and end 'date' field instead of 'datetime' marks event as "all-day event"
                 start: {
-                    date
+                    date: start
                 },
                 end: {
-                    date
+                    date: end
                 }
             }
         });
@@ -69,7 +69,7 @@ export class EventManager {
 
     private static dateOnlyIso(isoDate: string) {
         let date = new Date(Date.parse(isoDate));
-        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
     }
 
     private static getDateOfEvent(event: CalendarEvent, startOffset = 0, endOffset = 0) {
