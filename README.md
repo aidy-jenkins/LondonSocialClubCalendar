@@ -2,4 +2,7 @@
 
 Tool to grab posts from the [/r/londonsocialclub](https://reddit.com/r/londonsocialclub) subreddit and organise them into a dedicated Google Calendar
 
-*[Click this link to subscribe to the calendar](https://calendar.google.com/calendar/u/0?cid=YjN2M2w0M2dkazNmZzRoZGZzcWJhc2hpZWNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)*
+*[Click this link to subscribe to the calendar](https://calendar.google.com/calendar/u/0?cid=YjN2M2w0M2dkazNmZzRoZGZzcWJhc2hpZWNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)* 
+
+Subscribing only works on the desktop site, if on mobile, click the desktop link at the bottom of the page after it loads to subscribe using the full site.
+Once you have subscribed, the calendar will also sync with the Google Calendar mobile app
