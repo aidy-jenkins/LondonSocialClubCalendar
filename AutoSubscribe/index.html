@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>Subscribe to Calendar</title>
+        
+
+        <script type="text/javascript" src="index.js"></script>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <script type="text/javascript">
+            function handleResponse(response) {
+                console.log(response);
+                window.__lscgoogleauthcredential = response.credential;
+            }
+        </script>
+    </head>
+    <body>
+        <p>1. Sign into your Google account:</p>
+        <div style="width: 300px;">
+            <div id="g_id_onload"
+                data-client_id="282443687780-1seonvl8cfhvrd4mg13inlgld6pa4i8d.apps.googleusercontent.com"
+                data-callback="handleResponse"
+                data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="sign_in_with"
+                data-shape="rectangular"
+                data-logo_alignment="left">
+            </div>
+        </p>
+
+        <p>2. Click <button id="subscribe">here</button> to subscribe to the calendar</p>
+        <p>3. (optional) <a href="#" onclick="signOut();">Sign out</a>
+            
+        </p>
+
+
+    </body>
+</html>
