@@ -2,6 +2,7 @@ class Index {
     constructor() {
         this._subscribeButton = document.getElementById("subscribe");
         this._loginButton = document.getElementById("loginButton");
+        this._status = document.getElementById("status");
         this._apiClient = null;
         this._token = null;
         this._subscribeButton.addEventListener("click", e => this.subscribe());
@@ -35,6 +36,7 @@ class Index {
             });
             if (response.status < 200 || response.status >= 300)
                 throw new TypeError(`Request failed\r\n${response.status} - ${response.statusText}\r\n`);
+            this._status.textContent = "Calendar successfully added or already subscribed";
         }
         catch (err) {
             console.error(err);

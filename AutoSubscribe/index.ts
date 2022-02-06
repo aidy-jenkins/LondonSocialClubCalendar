@@ -4,8 +4,9 @@ class Index {
     private static readonly lscCalendarId = "b3v3l43gdk3fg4hdfsqbashiec@group.calendar.google.com";
     private static readonly clientId = "282443687780-1seonvl8cfhvrd4mg13inlgld6pa4i8d.apps.googleusercontent.com";
     
-    private _subscribeButton = document.getElementById("subscribe");
-    private _loginButton = document.getElementById("loginButton");
+    private _subscribeButton = document.getElementById("subscribe") as HTMLButtonElement;
+    private _loginButton = document.getElementById("loginButton") as HTMLButtonElement;
+    private _status = document.getElementById("status") as HTMLParagraphElement;
 
     private _apiClient = null as any;
     private _token = null as string;
@@ -48,6 +49,8 @@ class Index {
             });
             if(response.status < 200 || response.status >= 300)
                 throw new TypeError(`Request failed\r\n${response.status} - ${response.statusText}\r\n`);
+
+            this._status.textContent = "Calendar successfully added or already subscribed";
         }
         catch(err) {
             console.error(err);
