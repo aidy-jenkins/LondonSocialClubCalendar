@@ -12,7 +12,7 @@ class Index {
 
     constructor() {
         this._subscribeButton.addEventListener("click", e => this.subscribe());
-
+        this._loginButton.addEventListener("click", e => this.login());
 
         this._apiClient = google.accounts.oauth2.initTokenClient({
             client_id: Index.clientId,

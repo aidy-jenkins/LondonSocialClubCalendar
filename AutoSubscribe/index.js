@@ -5,6 +5,7 @@ class Index {
         this._apiClient = null;
         this._token = null;
         this._subscribeButton.addEventListener("click", e => this.subscribe());
+        this._loginButton.addEventListener("click", e => this.login());
         this._apiClient = google.accounts.oauth2.initTokenClient({
             client_id: Index.clientId,
             scope: 'https://www.googleapis.com/auth/calendar',
