@@ -108,3 +108,6 @@ londonsocialclubcalendar-key.json
 
 ##Sensitive config
 config.json
+
+*.js
+*.js.map
