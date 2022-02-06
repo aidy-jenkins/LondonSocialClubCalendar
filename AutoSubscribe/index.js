@@ -1,7 +1,7 @@
 class Index {
     constructor() {
         this._subscribeButton = document.getElementById("subscribe");
-        this._loginButton = document.getElementsByClassName("g_id_signin")[0];
+        this._loginButton = document.getElementById("loginButton");
         this._apiClient = null;
         this._token = null;
         this._subscribeButton.addEventListener("click", e => this.subscribe());

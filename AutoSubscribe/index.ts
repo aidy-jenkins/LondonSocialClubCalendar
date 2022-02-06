@@ -5,7 +5,7 @@ class Index {
     private static readonly clientId = "282443687780-1seonvl8cfhvrd4mg13inlgld6pa4i8d.apps.googleusercontent.com";
     
     private _subscribeButton = document.getElementById("subscribe");
-    private _loginButton = document.getElementsByClassName("g_id_signin")[0];
+    private _loginButton = document.getElementById("loginButton");
 
     private _apiClient = null as any;
     private _token = null as string;
