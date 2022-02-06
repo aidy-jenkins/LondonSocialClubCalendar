@@ -10,13 +10,21 @@ class Index {
                 alert("Not signed in");
                 return;
             }
-            await gapi.client.load("calendar", "v3");
-            await gapi.client.calendar.calendarList.insert({
-                oauth_token: token,
-                requestBody: {
+            await fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList", {
+                method: "POST",
+                body: JSON.stringify({
                     id: Index.lscCalendarId
+                }),
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
                 }
             });
+            // await gapi.client.load("calendar", "v3");
+            // gapi.client.setToken({access_token: token});
+            // await gapi.client.calendar.calendarList.insert({ 
+            //     id: Index.lscCalendarId
+            // });
             // await google.calendar("v3").calendarList.insert({ 
             //     oauth_token: token,
             //     requestBody: {
