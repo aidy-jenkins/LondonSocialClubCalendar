@@ -6,6 +6,8 @@
         <script type="text/javascript" src="index.js"></script>
         <script src="https://accounts.google.com/gsi/client" async defer></script>
         <script type="text/javascript">
+            window.exports = {};
+
             function handleResponse(response) {
                 console.log(response);
                 window.__lscgoogleauthcredential = response.credential;

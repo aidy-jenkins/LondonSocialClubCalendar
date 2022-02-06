@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const googleapis_1 = require("googleapis");
+import { google } from "googleapis";
 class Index {
     constructor() {
         this._subscribeButton = document.getElementById("subscribe");
@@ -13,7 +11,7 @@ class Index {
                 alert("Not signed in");
                 return;
             }
-            await googleapis_1.google.calendar("v3").calendarList.insert({
+            await google.calendar("v3").calendarList.insert({
                 oauth_token: token,
                 requestBody: {
                     id: Index.lscCalendarId
