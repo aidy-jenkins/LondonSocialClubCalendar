@@ -20,11 +20,9 @@ class Index {
                 return;
             }
             await gapi.client.load("calendar", "v3");
+            gapi.client.setToken({access_token: token});
             await gapi.client.calendar.calendarList.insert({ 
-                oauth_token: token,
-                requestBody: {
-                    id: Index.lscCalendarId
-                }
+                id: Index.lscCalendarId
             });
             // await google.calendar("v3").calendarList.insert({ 
             //     oauth_token: token,
