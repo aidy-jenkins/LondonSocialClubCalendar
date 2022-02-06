@@ -39,7 +39,8 @@ class Index {
                 let response = yield fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList", {
                     method: "POST",
                     body: JSON.stringify({
-                        id: Index.lscCalendarId
+                        id: Index.lscCalendarId,
+                        selected: true
                     }),
                     headers: {
                         Authorization: `Bearer ${token}`,
