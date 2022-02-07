@@ -7,13 +7,22 @@ class Index {
     private _subscribeButton = document.getElementById("subscribe") as HTMLButtonElement;
     private _loginButton = document.getElementById("loginButton") as HTMLButtonElement;
     private _status = document.getElementById("status") as HTMLParagraphElement;
+    private _calendarName = document.getElementById("calendarName") as HTMLSpanElement;
 
     private _apiClient = null as any;
     private _token = null as string;
+    private _queryParams = null as { [key: string]: string; };
+    private get queryParams() {
+        return this._queryParams ?? (this._queryParams = this.getQueryParams());
+    }
 
     constructor() {
         this._subscribeButton.addEventListener("click", e => this.subscribe());
         this._loginButton.addEventListener("click", e => this.login());
+
+        if(!this.queryParams.calendarid) {
+            this._calendarName.textContent = "LSC";
+        }
 
         this._apiClient = google.accounts.oauth2.initTokenClient({
             client_id: Index.clientId,
@@ -37,10 +46,14 @@ class Index {
                 return;
             }
 
+            let calendarId = this.queryParams.calendarid;
+            if(!calendarId)
+                calendarId = Index.lscCalendarId;
+
             let response = await fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList", {
                 method: "POST",
                 body: JSON.stringify({
-                    id: Index.lscCalendarId,
+                    id: calendarId,
                     selected: true
                 }),
                 headers: {
@@ -58,6 +71,12 @@ class Index {
             alert("failed");
         }
     }
+
+    private getQueryParams() {
+        return window.location.search.substring(1).split('&').map(x => x.split('=')).reduce((obj, [key, value]) => ({ [key]: value, ...obj}), {}) as {
+            [key: string]: string;
+        };
+    }
 }
 
-setTimeout(() => new Index(), 0);
+setTimeout(() => new Index(), 200);
