@@ -23,7 +23,7 @@ class Index {
         }
         this._apiClient = google.accounts.oauth2.initTokenClient({
             client_id: Index.clientId,
-            scope: 'https://www.googleapis.com/auth/calendar',
+            scope: 'https://www.googleapis.com/auth/calendar.app.created https://www.googleapis.com/auth/calendar.events.public.readonly',
             callback: (tokenResponse) => { this._token = tokenResponse.access_token; },
         });
     }
