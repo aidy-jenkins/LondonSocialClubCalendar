@@ -26,7 +26,7 @@ class Index {
 
         this._apiClient = google.accounts.oauth2.initTokenClient({
             client_id: Index.clientId,
-            scope: 'https://www.googleapis.com/auth/calendar.app.created',
+            scope: 'https://www.googleapis.com/auth/calendar',
             callback: (tokenResponse) => { this._token = tokenResponse.access_token },
         });
           
