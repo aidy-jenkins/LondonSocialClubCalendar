@@ -40,6 +40,29 @@ export class EventManager {
         return events;
     }
 
+    async getWeeksPosts(date?: Date) {
+        let events = await this.getWeeksEvents(date);
+        return events.items.map(event => ({ eventId: event.id, description: event.description }));
+    }
+
+    private async getWeeksEvents(date?: Date) {
+        date ??= new Date();
+        date.setHours(0, 0, 0, 0);
+
+        let endDate = new Date(date);
+        endDate.setDate(date.getDate() + 7);
+
+        //TODO: Cache the week's events to reduce queries for new events
+        let events = await this.calendarApi.events.list({
+            calendarId: this.calendarId,
+            timeMin: EventManager.dateTimeIso(date),
+            timeMax: EventManager.dateTimeIso(endDate)
+        })
+        .then(response => response.data);
+
+        return events;
+    }
+
     async publishEvent(calendarEvent: CalendarEvent) {
 
         if(await this.eventExists(calendarEvent))
@@ -67,9 +90,20 @@ export class EventManager {
         });
     }
 
+    async deleteEvent(eventId: string) {
+        await this.calendarApi.events.delete({
+            calendarId: this.calendarId,
+            eventId
+        });
+    }
+
     private static dateOnlyIso(isoDate: string) {
         let date = new Date(Date.parse(isoDate));
         return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    }
+
+    private static dateTimeIso(date: Date) {
+        return JSON.parse(JSON.stringify(date));
     }
 
     private static getDateOfEvent(event: CalendarEvent, startOffset = 0, endOffset = 0) {
@@ -80,7 +114,7 @@ export class EventManager {
         dateStart.setHours(startOffset, 0, 0, 0);
         dateEnd.setHours(endOffset, 0, 0, 0);
     
-        return { start: JSON.parse(JSON.stringify(dateStart)), end: JSON.parse(JSON.stringify(dateEnd)) };
+        return { start: this.dateTimeIso(dateStart), end: this.dateTimeIso(dateEnd) };
     }
 }
 
