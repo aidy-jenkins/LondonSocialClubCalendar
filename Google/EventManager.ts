@@ -48,6 +48,7 @@ export class EventManager {
     private async getWeeksEvents(date?: Date) {
         date ??= new Date();
         date.setHours(0, 0, 0, 0);
+	date.setDate(date.getDate() - 1);
 
         let endDate = new Date(date);
         endDate.setDate(date.getDate() + 7);
