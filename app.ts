@@ -75,7 +75,7 @@ const getDetailsFromDescription = (description: string) => {
 const deleteRemovedEvents = async (snoowrap: Snoowrap, eventManager: EventManager) => {
     let posts = linq(await eventManager.getWeeksPosts());
     
-    posts = posts.take(5); //Let's keep this low so Reddit doesn't come after my wallet
+    posts = posts.take(10); //Let's keep this low so Reddit doesn't come after my wallet
     
     let submissions = posts.select(({eventId, description}) => ({ eventId, ...getDetailsFromDescription(description) }));
     for (let {eventId, postDetail, submissionId } of submissions) {
