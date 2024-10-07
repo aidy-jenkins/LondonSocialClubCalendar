@@ -1,0 +1,138 @@
+<html>
+    <head>
+        <title>Event List</title>
+        <style type="text/css">
+            .html {
+                width: 100%;    
+                height: 100%;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+            }
+
+            #gcalmonthview, #gcaleventlist {
+                margin: 50px;
+                margin-top: 0px;
+                margin-bottom: 25px;
+            }
+
+            span, input {
+                margin-left: 50px;
+                margin-bottom: 50px;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <span>Current View: </span><input id="datepicker" type="date" /> <input id="todaybutton" type="button" value="Today" />
+        </div>
+        <div>
+            <div>
+                <span id="monthTitle"></span>
+            </div>
+            <iframe id="gcalmonthview" src="" style="border:solid 0px #777" frameborder="0" scrolling="no"></iframe>
+        </div>
+        <div>
+            <div><span id="eventListTitle"></span></div>
+            <iframe id="gcaleventlist" src="" style="border:solid 0px #777" frameborder="0" scrolling="yes"></iframe>
+        </div>
+
+        <script type="text/javascript">
+            /** @type {{ [key: string]: string; }} */
+            let _queryParams;
+            const queryParam = (/** @type string */key) => {
+                _queryParams ??= Object.fromEntries(window.location.search.substring(1)
+                .split('&')
+                .map(x => x.split('=') /** as [string, string][] */)
+                .map(([key, value]) => value === void 0 || value === "" ? [key, true] : [key, value]));
+
+                return _queryParams[key];
+            }; 
+
+            const getIsoDate = 
+                /** @param { Date } date @returns { string } */
+                date => `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+
+            let currentDate = new Date(queryParam("date") ?? Date.now());
+            currentDate.setHours(0, 0, 0, 0);
+
+            let sDate = getIsoDate(currentDate);
+
+            /** @type HTMLInputElement */ 
+            let todayButton = document.getElementById("todaybutton");
+            /** @type HTMLInputElement */ 
+            let datepicker = document.getElementById('datepicker');
+            datepicker.value = sDate;
+            sDate = sDate.replaceAll("-", "");
+            
+            const handleEvent = e => {
+                if(datepicker.value.replaceAll("-", "") === sDate)
+                    return;
+
+                let currentPage = window.location.href;
+                let queryIndex = currentPage.indexOf('?');
+                if(queryIndex > 0)
+                    currentPage = currentPage.substring(0, queryIndex);
+
+                window.location.assign(`${currentPage}?date=${datepicker.value}`);
+            };
+
+            datepicker.onchange = e => {
+                //if user only changes date then update immediately
+                //if user changes month/year, this often changes the UI so don't assume they are done until the blur event triggers
+                let dateValue = datepicker.valueAsDate;
+                if(dateValue.getFullYear() === currentDate.getFullYear()
+                && dateValue.getMonth() === currentDate.getMonth()) {
+                    handleEvent(e);
+                }
+            };
+            datepicker.onblur = handleEvent;
+
+            todayButton.onclick = e => {
+                let today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if(+currentDate === +today)
+                    return;
+
+                datepicker.value = getIsoDate(today);
+
+                handleEvent(e);
+            }
+
+            const src = "https://calendar.google.com/calendar/embed?showFooter=0&showNav=0&wkst=2&ctz=Europe%2FLondon&bgcolor=%23ffffff&hl=en_GB&showTitle=0&showPrint=0&showTz=0&showCalendars=0&showTabs=0&src=b3v3l43gdk3fg4hdfsqbashiec%40group.calendar.google.com&color=%23F09300";
+            
+            /** @type HTMLSpanElement */
+            let monthTitle = document.getElementById('monthTitle');
+            /** @type HTMLSpanElement */ 
+            let eventListTitle = document.getElementById('eventListTitle');
+
+            let longMonthFormatter = new Intl.DateTimeFormat("en-GB", { month: "long" });
+            let shortMonthFormatter = new Intl.DateTimeFormat("en-GB", { month: "short" });
+
+            monthTitle.textContent = `${longMonthFormatter.format(currentDate)} ${currentDate.getFullYear()}`;
+            eventListTitle.textContent = `Upcoming events from ${currentDate.getDate()} ${shortMonthFormatter.format(currentDate)} ${currentDate.getFullYear()}`;
+
+            /** @type HTMLIFrameElement */ 
+            let gcalmonthview = document.getElementById('gcalmonthview');
+            /** @type HTMLIFrameElement */ 
+            let gcaleventlist = document.getElementById('gcaleventlist');
+            
+            const margin = 50;
+            let monthViewHeight = (3 * (window.innerHeight - (2 * margin))) / 5;
+            let eventViewHeight = (1 * (window.innerHeight - (2 * margin))) / 5;
+            
+            gcalmonthview.width = window.innerWidth / 2 - (2 * margin);
+            gcaleventlist.width = gcalmonthview.width;
+            
+            gcalmonthview.height = monthViewHeight;
+            gcaleventlist.height = eventViewHeight;
+            
+            let monthSrc = src + `&mode=MONTH&showDate=0&width=${gcalmonthview.width}&height=${gcalmonthview.height}&dates=${sDate}/${sDate}`;
+            let eventSrc = src + `&mode=AGENDA&showDate=0&width=${gcalmonthview.width}&height=${gcalmonthview.height}&dates=${sDate}/${sDate}`;
+
+            gcalmonthview.src = monthSrc;
+            gcaleventlist.src = eventSrc;
+        </script>
+    </body>
+</html>
