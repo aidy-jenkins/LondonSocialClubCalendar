@@ -41,5 +41,5 @@ jobs:
         uses: johnnyhuy/actions-discord-git-webhook@v1.0.0
         with:
           # Discord webhook URL
-          webhook_url: ${{ DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           
