@@ -37,9 +37,8 @@ jobs:
           CONFIG: ${{ secrets.CONFIG }}
           AUTHKEY: ${{ secrets.AUTHKEY }}
 
-      - name: discord-webhook
-        uses: johnnyhuy/actions-discord-git-webhook@v1.0.0
+      - uses: fateyan/action-discord-notifier@v1
         with:
-          # Discord webhook URL
-          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          message-title: Export complete
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
           
