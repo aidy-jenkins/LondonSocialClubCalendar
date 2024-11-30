@@ -37,17 +37,9 @@ jobs:
           CONFIG: ${{ secrets.CONFIG }}
           AUTHKEY: ${{ secrets.AUTHKEY }}
 
-      - name: Discord Reporter
-        # You may pin to the exact commit or the version.
-        # uses: TeamGalacticraft/discord-reporter@a9c55d6f9fc2245aca27367c95e9d36c6aa36359
-        uses: TeamGalacticraft/discord-reporter@1.0.0
+      - name: discord-webhook
+        uses: johnnyhuy/actions-discord-git-webhook@v1.0.0
         with:
-          # The Discord-provided webhook url.
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          # Outcome of previous step, use .
-          outcome: ${{ steps.export-calendar-events.outcome }}
-          # Github token, use ${{ secrets.GITHUB_TOKEN }}.
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Discord webhook URL
+          webhook_url: ${{ DISCORD_WEBHOOK }}
           
-      
-
