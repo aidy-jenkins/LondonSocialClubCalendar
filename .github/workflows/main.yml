@@ -43,7 +43,7 @@ jobs:
         uses: TeamGalacticraft/discord-reporter@1.0.0
         with:
           # The Discord-provided webhook url.
-          webhook: ${{ secrets.WEBHOOK_URL }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
           # Outcome of previous step, use .
           outcome: ${{ steps.export-calendar-events.outcome }}
           # Github token, use ${{ secrets.GITHUB_TOKEN }}.
