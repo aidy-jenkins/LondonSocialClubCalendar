@@ -32,14 +32,14 @@ jobs:
       - run: npm install
       - id: export-calendar-events
         name: Export events to Calendar
-        run: node --nolazy -r ts-node/register app.ts
+        run: notestde --nolazy -r ts-node/register app.ts
         env:
           CONFIG: ${{ secrets.CONFIG }}
           AUTHKEY: ${{ secrets.AUTHKEY }}
 
       - name: Notify discord
         uses: th0th/notify-discord@v0.4.1
-        if: ${{ always() }}
+        if: ${{ !success() }}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
           GITHUB_ACTOR: ${{ github.actor }}
