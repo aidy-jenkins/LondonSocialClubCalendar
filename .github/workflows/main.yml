@@ -32,7 +32,7 @@ jobs:
       - run: npm install
       - id: export-calendar-events
         name: Export events to Calendar
-        run: notestde --nolazy -r ts-node/register app.ts
+        run: node --nolazy -r ts-node/register app.ts
         env:
           CONFIG: ${{ secrets.CONFIG }}
           AUTHKEY: ${{ secrets.AUTHKEY }}
