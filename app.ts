@@ -127,4 +127,4 @@ let run = (async () => {
 
 let timeoutHandle = setTimeout(() => process.exit(1), 60000); //Ensure process doesn't exit until timeout is reached or finished processing
 
-run.then(() => process.exit(0), err => { for(let line of err.toString().split(";")) { console.error(`${line};`); } setTimeout(() => process.exit(1), 1000); });
+run.then(() => process.exit(0), err => { for(let line of err.toString().split(";")) { console.error(`${line};`); } console.error(err.stack); setTimeout(() => process.exit(1), 1000); });
